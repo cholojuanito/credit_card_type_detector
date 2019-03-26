@@ -1,0 +1,15 @@
+name: credit_card_type_detector
+description: A Dart package that detects credit card types based on the currently defined prefixes
+version: 0.1.0
+author: Tanner Davis <tannerdavisr@gmail.com>
+homepage: https://github.com/cholojuanito
+repository: https://github.com/cholojuanito/credit_card_type_detector
+issue_tracker: https://github.com/cholojuanito/credit_card_type_detector/issues
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+
+dev_dependencies:
+  test: ^1.5.3
