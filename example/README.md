@@ -1,9 +1,8 @@
 # Add Credit Card Screen
+## This example can be seen in the gif found in the root README
 A screen for entering credit card information. As the user enters the credit card number the type of credit card is checked and then displayed.
 
 This example was created by [Cholojuanito](https://github.com/cholojuanito).
-
-![A gif of the example app](example.gif)
 
 The code is available in the `example` directory of the [git repo](https://github.com/cholojuanito/credit_card_type_detector).
 
