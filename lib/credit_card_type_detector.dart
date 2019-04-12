@@ -6,33 +6,39 @@ enum CreditCardType {
   amex,
   discover,
   mastercard,
+  unknown,
 }
 
 /// CC prefix patterns as of March 2019
 /// A [List<String>] represents a range.
-/// i.e. ['50', '55'] represents the range of cards starting with '50' to those starting with '55'
-const Map<CreditCardType, List<List<String>>> cardPatterns = {
-  CreditCardType.visa: [
+/// i.e. ['51', '55'] represents the range of cards starting with '51' to those starting with '55'
+const Map<CreditCardType, Set<List<String>>> cardNumPatterns = {
+  CreditCardType.visa: {
     ['4'],
-  ],
-  CreditCardType.amex: [
+  },
+  CreditCardType.amex: {
     ['34'],
     ['37'],
-  ],
-  CreditCardType.discover: [
+  },
+  CreditCardType.discover: {
     ['6011'],
     ['622126', '622925'],
     ['644', '649'],
     ['65']
-  ],
-  CreditCardType.mastercard: [
-    ['50', '55']
-  ],
+  },
+  CreditCardType.mastercard: {
+    ['51', '55'],
+    ['2221', '2229'],
+    ['223', '229'],
+    ['23', '26'],
+    ['270', '271'],
+    ['2720'],
+  },
 };
 
 /// This function determines the CC type based on the cardPatterns
 CreditCardType detectCCType(String ccNumStr) {
-  CreditCardType cardType;
+  CreditCardType cardType = CreditCardType.unknown;
 
   if (ccNumStr.isEmpty) {
     return cardType;
@@ -40,15 +46,15 @@ CreditCardType detectCCType(String ccNumStr) {
 
   //TODO error checking for strings with non-numerical chars
 
-  cardPatterns.forEach(
-    (CreditCardType type, List<List<String>> patterns) {
+  cardNumPatterns.forEach(
+    (CreditCardType type, Set<List<String>> patterns) {
       for (List<String> patternRange in patterns) {
         // Remove any spaces
         String ccPatternStr = ccNumStr.replaceAll(RegExp(r'\s+\b|\b\s'), '');
-        int patternLen = patternRange[0].length;
+        int rangeLen = patternRange[0].length;
         // Trim the CC number str to match the pattern prefix length
-        if (patternLen < ccNumStr.length) {
-          ccPatternStr = ccPatternStr.substring(0, patternLen);
+        if (rangeLen < ccNumStr.length) {
+          ccPatternStr = ccPatternStr.substring(0, rangeLen);
         }
 
         if (patternRange.length > 1) {
