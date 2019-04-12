@@ -6,11 +6,12 @@ enum CreditCardType {
   amex,
   discover,
   mastercard,
+  unknown,
 }
 
 /// CC prefix patterns as of March 2019
 /// A [List<String>] represents a range.
-/// i.e. ['50', '55'] represents the range of cards starting with '50' to those starting with '55'
+/// i.e. ['51', '55'] represents the range of cards starting with '51' to those starting with '55'
 const Map<CreditCardType, Set<List<String>>> cardPatterns = {
   CreditCardType.visa: {
     ['4'],
@@ -26,13 +27,18 @@ const Map<CreditCardType, Set<List<String>>> cardPatterns = {
     ['65']
   },
   CreditCardType.mastercard: {
-    ['50', '55']
+    ['51', '55'],
+    ['2221', '2229'],
+    ['223', '229'],
+    ['23', '26'],
+    ['270', '271'],
+    ['2720'],
   },
 };
 
 /// This function determines the CC type based on the cardPatterns
 CreditCardType detectCCType(String ccNumStr) {
-  CreditCardType cardType;
+  CreditCardType cardType = CreditCardType.unknown;
 
   if (ccNumStr.isEmpty) {
     return cardType;
