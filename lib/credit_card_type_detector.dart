@@ -12,7 +12,7 @@ enum CreditCardType {
 /// CC prefix patterns as of March 2019
 /// A [List<String>] represents a range.
 /// i.e. ['51', '55'] represents the range of cards starting with '51' to those starting with '55'
-const Map<CreditCardType, Set<List<String>>> cardPatterns = {
+const Map<CreditCardType, Set<List<String>>> cardNumPatterns = {
   CreditCardType.visa: {
     ['4'],
   },
@@ -46,15 +46,15 @@ CreditCardType detectCCType(String ccNumStr) {
 
   //TODO error checking for strings with non-numerical chars
 
-  cardPatterns.forEach(
+  cardNumPatterns.forEach(
     (CreditCardType type, Set<List<String>> patterns) {
       for (List<String> patternRange in patterns) {
         // Remove any spaces
         String ccPatternStr = ccNumStr.replaceAll(RegExp(r'\s+\b|\b\s'), '');
-        int patternLen = patternRange[0].length;
+        int rangeLen = patternRange[0].length;
         // Trim the CC number str to match the pattern prefix length
-        if (patternLen < ccNumStr.length) {
-          ccPatternStr = ccPatternStr.substring(0, patternLen);
+        if (rangeLen < ccNumStr.length) {
+          ccPatternStr = ccPatternStr.substring(0, rangeLen);
         }
 
         if (patternRange.length > 1) {
