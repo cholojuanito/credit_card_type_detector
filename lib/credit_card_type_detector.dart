@@ -51,10 +51,10 @@ CreditCardType detectCCType(String ccNumStr) {
       for (List<String> patternRange in patterns) {
         // Remove any spaces
         String ccPatternStr = ccNumStr.replaceAll(RegExp(r'\s+\b|\b\s'), '');
-        int patternLen = patternRange[0].length;
+        int rangeLen = patternRange[0].length;
         // Trim the CC number str to match the pattern prefix length
-        if (patternLen < ccNumStr.length) {
-          ccPatternStr = ccPatternStr.substring(0, patternLen);
+        if (rangeLen < ccNumStr.length) {
+          ccPatternStr = ccPatternStr.substring(0, rangeLen);
         }
 
         if (patternRange.length > 1) {
