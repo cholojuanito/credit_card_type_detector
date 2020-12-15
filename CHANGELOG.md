@@ -1,5 +1,8 @@
-## Up next
-* Return multiple potential cards until an exact match has been made
+## [2.0.0-nullsafety.0] - Dec 15, 2020
+* Dart null safety ready! Updated dependencies to be ready.
+* More edge case tests and unit tests
+  * Checks for non-numeric characters
+  * Testing for more incorrect card numbers
 
 ## [1.1.0] - Sept 23, 2019 
 * Now supports all cards that the [Braintree module supports](https://github.com/braintree/credit-card-type/)
