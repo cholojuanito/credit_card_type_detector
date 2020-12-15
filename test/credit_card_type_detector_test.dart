@@ -27,35 +27,48 @@ void main() {
       final String discoverCCNumPartial = "6011 2876 89";
       final String masterCardCCNumPartial = "5287 19";
 
-      // Test Visa
       expect(detectCCType(visaCCNumPartial), CreditCardType.visa);
-
-      // Test Amex
       expect(detectCCType(amexCCNumPartial), CreditCardType.amex);
-
-      // Test Discover
       expect(detectCCType(discoverCCNumPartial), CreditCardType.discover);
-
-      // Test MasterCard
       expect(detectCCType(masterCardCCNumPartial), CreditCardType.mastercard);
     });
   });
 
 // Test CC numbers that are not supported
   group('Incorrect CC numbers', () {
-    test('full card numbers', () {});
+    test('full card numbers', () {
+      final String badCCNumFull1 = "8647 7200 6779 1032";
+      final String badCCNumFull2 = "3399 9661 4347 2781";
+      final String badCCNumFull3 = "6111 9340 9644 0452";
 
-    test('partial card numbers', () {});
+      expect(detectCCType(badCCNumFull1), CreditCardType.unknown);
+      expect(detectCCType(badCCNumFull2), CreditCardType.unknown);
+      expect(detectCCType(badCCNumFull3), CreditCardType.unknown);
+    });
+
+    test('partial card numbers', () {
+      final String badCCNumPartial1 = "8647 7200";
+      final String badCCNumPartial2 = "3399";
+      final String badCCNumPartial3 = "6111 2878 9";
+
+      expect(detectCCType(badCCNumPartial1), CreditCardType.unknown);
+      expect(detectCCType(badCCNumPartial2), CreditCardType.unknown);
+      expect(detectCCType(badCCNumPartial3), CreditCardType.unknown);
+    });
   });
 
 // Test empty string and other edge cases
   group('Edge cases', () {
-    test('Empty string', () {
+    test('empty string', () {
       final String emptyStr = '';
-      expect(detectCCType(emptyStr), null);
+
+      expect(detectCCType(emptyStr), CreditCardType.unknown);
     });
 
-    // TODO
-    test('String with non-numerical chars', () {});
+    test('string with non-numerical chars', () {
+      final String badStr = '4000 abc';
+
+      expect(detectCCType(badStr), CreditCardType.unknown);
+    });
   });
 }
