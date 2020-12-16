@@ -128,21 +128,31 @@ const Map<CreditCardType, Set<List<String>>> cardNumPatterns = {
   }
 };
 
+/// Finds non numeric characters
+RegExp _nonNumeric = RegExp(r'\D+');
+
+/// Finds whitespace in any form
+RegExp _whiteSpace = RegExp(r'\s+\b|\b\s');
+
 /// This function determines the CC type based on the cardPatterns
 CreditCardType detectCCType(String ccNumStr) {
   CreditCardType cardType = CreditCardType.unknown;
+  ccNumStr = ccNumStr.replaceAll(_whiteSpace, '');;
 
   if (ccNumStr.isEmpty) {
     return cardType;
   }
 
-  //TODO error checking for strings with non-numerical chars
+  // Check that only numerics are in the string
+  if (_nonNumeric.hasMatch(ccNumStr)) {
+    return cardType;
+  }
 
   cardNumPatterns.forEach(
     (CreditCardType type, Set<List<String>> patterns) {
       for (List<String> patternRange in patterns) {
         // Remove any spaces
-        String ccPatternStr = ccNumStr.replaceAll(RegExp(r'\s+\b|\b\s'), '');
+        String ccPatternStr = ccNumStr;
         int rangeLen = patternRange[0].length;
         // Trim the CC number str to match the pattern prefix length
         if (rangeLen < ccNumStr.length) {
