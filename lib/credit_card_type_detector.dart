@@ -84,7 +84,6 @@ const Map<CreditCardType, Set<List<String>>> cardNumPatterns = {
     ['56', '59'],
     ['63'],
     ['67'],
-    //['6'], Not 100% about this one
   },
   CreditCardType.elo: {
     ['401178'],
