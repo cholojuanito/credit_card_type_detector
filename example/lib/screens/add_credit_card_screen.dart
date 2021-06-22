@@ -47,7 +47,6 @@ class AddCreditCardScreen extends StatelessWidget {
           child: Container(
             width: ccDrawingWidth,
             decoration: BoxDecoration(
-              //image: DecorationImage(), //TODO change the background
               borderRadius: BorderRadius.all(
                 Radius.circular(12.0),
               ),
@@ -113,6 +112,7 @@ class AddCreditCardScreen extends StatelessWidget {
                           );
                           break;
 
+                        case CreditCardType.maestro:
                         case CreditCardType.mastercard:
                           icon = Icon(
                             FontAwesomeIcons.ccMastercard,
@@ -129,6 +129,23 @@ class AddCreditCardScreen extends StatelessWidget {
                           );
                           break;
 
+                        case CreditCardType.dinersclub:
+                          icon = Icon(
+                            FontAwesomeIcons.ccDinersClub,
+                            size: ccIconSize,
+                            color: Color(0xffffffff),
+                          );
+                          break;
+
+                        case CreditCardType.jcb:
+                          icon = Icon(
+                            FontAwesomeIcons.ccJcb,
+                            size: ccIconSize,
+                            color: Color(0xffffffff),
+                          );
+                          break;
+
+                        // Don't have icons for the rest
                         default:
                           icon = Container(
                             color: Color(0x00000000),
@@ -400,7 +417,6 @@ class AddCreditCardScreen extends StatelessWidget {
     _context = context;
     _addCardBloc = BlocProvider.of<AddCreditCardBloc>(context);
     return Scaffold(
-      resizeToAvoidBottomPadding: true,
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: Color(0xffffffff),

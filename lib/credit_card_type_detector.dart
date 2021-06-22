@@ -121,6 +121,8 @@ const Map<CreditCardType, Set<List<String>>> cardNumPatterns = {
     ['637599'],
     ['637609'],
     ['637612'],
+    ['63743358'],
+    ['63737423'],
   },
   CreditCardType.hipercard: {
     ['606282'],

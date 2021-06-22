@@ -14,3 +14,6 @@ doc/api/
 
 # IDE stuff
 .idea/
+.vscode/
+
+example/ios/Flutter/flutter_export_environment.sh

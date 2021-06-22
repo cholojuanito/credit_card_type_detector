@@ -11,6 +11,7 @@ void main() {
       final String jcbCardCCNumFull = '3538 2430 3999 1295';
       final String unionPayCardCCNumFull = '6208 2430 3999 1295';
       final String maestroCardCCNumFull = '4936 9830 3999 1295';
+      final String eloCardCCNumFull = '6550 2121 9875 8900';
 
       expect(detectCCType(visaCCNumFull), CreditCardType.visa);
       expect(detectCCType(amexCCNumFull), CreditCardType.amex);
@@ -19,27 +20,30 @@ void main() {
       expect(detectCCType(jcbCardCCNumFull), CreditCardType.jcb);
       expect(detectCCType(unionPayCardCCNumFull), CreditCardType.unionpay);
       expect(detectCCType(maestroCardCCNumFull), CreditCardType.maestro);
+      expect(detectCCType(eloCardCCNumFull), CreditCardType.elo);
     });
 
     test('partial card numbers', () {
-      final String visaCCNumPartial = "4647 7200";
-      final String amexCCNumPartial = "3499";
-      final String discoverCCNumPartial = "6011 2876 89";
-      final String masterCardCCNumPartial = "5287 19";
+      final String visaCCNumPartial = '4647 7200';
+      final String amexCCNumPartial = '3499';
+      final String discoverCCNumPartial = '6011 2876 89';
+      final String masterCardCCNumPartial = '5287 19';
+      final String eloCardCCNumPartial = '6550 2121';
 
       expect(detectCCType(visaCCNumPartial), CreditCardType.visa);
       expect(detectCCType(amexCCNumPartial), CreditCardType.amex);
       expect(detectCCType(discoverCCNumPartial), CreditCardType.discover);
       expect(detectCCType(masterCardCCNumPartial), CreditCardType.mastercard);
+      expect(detectCCType(eloCardCCNumPartial), CreditCardType.elo);
     });
   });
 
 // Test CC numbers that are not supported
   group('Incorrect CC numbers', () {
     test('full card numbers', () {
-      final String badCCNumFull1 = "8647 7200 6779 1032";
-      final String badCCNumFull2 = "3399 9661 4347 2781";
-      final String badCCNumFull3 = "6111 9340 9644 0452";
+      final String badCCNumFull1 = '8647 7200 6779 1032';
+      final String badCCNumFull2 = '3399 9661 4347 2781';
+      final String badCCNumFull3 = '6111 9340 9644 0452';
 
       expect(detectCCType(badCCNumFull1), CreditCardType.unknown);
       expect(detectCCType(badCCNumFull2), CreditCardType.unknown);
@@ -47,9 +51,9 @@ void main() {
     });
 
     test('partial card numbers', () {
-      final String badCCNumPartial1 = "8647 7200";
-      final String badCCNumPartial2 = "3399";
-      final String badCCNumPartial3 = "6111 2878 9";
+      final String badCCNumPartial1 = '8647 7200';
+      final String badCCNumPartial2 = '3399';
+      final String badCCNumPartial3 = '6111 2878 9';
 
       expect(detectCCType(badCCNumPartial1), CreditCardType.unknown);
       expect(detectCCType(badCCNumPartial2), CreditCardType.unknown);

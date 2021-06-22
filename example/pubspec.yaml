@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  credit_card_type_detector: ^0.1.0
+  credit_card_type_detector: ^1.1.0
   font_awesome_flutter: ^8.4.0
   flutter_masked_text: ^0.8.0
 
