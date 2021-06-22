@@ -1,3 +1,8 @@
+## [2.0.0] - Jun 22, 2021
+* Dart null safety ready official release
+* Added some more Hipercard numbers
+* Touched up the example app
+
 ## [2.0.0-nullsafety.0] - Dec 15, 2020
 * Dart null safety ready! Updated dependencies to be ready.
 * More edge case tests and unit tests
