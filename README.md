@@ -33,8 +33,8 @@ assert(type == CreditCardType.visa)
 **Check out the example app** in the [example](example) directory or the 'Example' tab on pub.dartlang.org for a more complete example using the BLoC pattern
 
 # Features
-### No external dependencies
-### Supported cards: 
+* No external dependencies
+* Supported cards: 
     * Visa
     * Mastercard
     * American Express
@@ -46,6 +46,7 @@ assert(type == CreditCardType.visa)
     * Mir
     * Elo
     * Hiper/Hipercard
+
 ### Pattern Detection
 Each card type has a corresponding list of patterns. See the `cardNumPatterns` map.
 Each pattern is an array of strings that represents a range of numbers or a single number. These numbers correspond to the [Issuer Identification number (IIN)](https://en.wikipedia.org/wiki/Payment_card_number) for the credit card company.
@@ -63,15 +64,17 @@ The package loops over every card type and everyone of its corresponding pattern
 
 I.e. `CreditCardType.visa` for  any card number that starts with '4'.
 
+# Related Repos
+* [Credit Card Validator - Cholojuanito GitHub](https://github.com/cholojuanito/credit_card_validator)
+
 # Author
 Cholojuanito (Tanner Davis) - *Creator and repo owner* - [Github Profile](https://github.com/cholojuanito)
 
 # Support
-If you think this package is helpful, tell your friends, give it a star on GitHub, and a like on [pub.dev](https://pub.dev/packages/credit_card_validator)
+If you think this package is helpful, tell your friends, give it a star on GitHub, and a like on [pub.dev](https://pub.dev/packages/credit_card_type_detector)
 
-I also have a Patreon if you are feeling extra generous
+[!["Buy Me A Pizza"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/cholojuanito)
 
-[![Patreon](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fwww.patreon.com%2Fapi%2Fcampaigns%2F6586046&query=data.attributes.patron_count&suffix=%20Patrons&color=FF5441&label=Patreon&logo=Patreon&logoColor)](https://patreon.com/cholojuanito)
 
 # License
 This project is licensed under the MIT License - see the [LICENSE file](LICENSE) for more details
