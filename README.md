@@ -1,7 +1,7 @@
 # credit_card_type_detector | Credit Card Type Detector
 A Dart package that detects credit card types based on the current credit card number patterns
 
-This inspired by [Braintree's credit-card-type module](https://github.com/braintree/credit-card-type/)
+This package is inspired by [Braintree's credit-card-type module](https://github.com/braintree/credit-card-type/)
 
 ![Gif of the example app](example/example.gif)
 
