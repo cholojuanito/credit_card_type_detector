@@ -77,3 +77,29 @@ CreditCardType detectCCType(String ccNumStr) {
 
   return cardType;
 }
+
+/// Gets the `CreditCardType` object associated with the `cardName`
+CreditCardType? getCardType(String cardName) {
+  return _customCards.getCardType(cardName);
+}
+
+/// Adds a custom card type to the card collection
+/// 
+/// Throws `Exception` if the `cardName` is already in the collection
+void addCustomCardType(String cardName, CreditCardType type) {
+  _customCards.addCardType(cardName, type);
+}
+
+/// Updates the card type of the `cardName` in the card collection
+void updateCustomCardType(String cardName, CreditCardType type) {
+  _customCards.updateCardType(cardName, type);
+}
+
+/// Removes `cardName` from the card collection
+void removeCustomCardType(String cardName) {
+  CreditCardType? _ = _customCards.removeCard(cardName);
+}
+
+void resetCustomCardTypes() {
+  _customCards = CardCollection.from(_defaultCCTypes);
+}
