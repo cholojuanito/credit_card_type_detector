@@ -128,6 +128,19 @@ class CreditCardType {
   void updateSecurityCode(SecurityCode securityCode) {
     this.securityCode = securityCode;
   }
+
+  @override
+  bool operator ==(Object other) => (other is CreditCardType)
+      ? (type == other.type &&
+          prettyType == other.prettyType &&
+          lengths == other.lengths &&
+          patterns == other.patterns &&
+          securityCode == other.securityCode)
+      : false;
+
+  @override
+  int get hashCode =>
+      Object.hash(type, prettyType, lengths, patterns, securityCode);
 }
 
 /// Represents different patterns a credit card number pattern can have.
@@ -143,6 +156,13 @@ class Pattern {
   void addPrefix(String prefix) {
     prefixes.add(prefix);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      (other is Pattern) ? (prefixes == other.prefixes) : false;
+
+  @override
+  int get hashCode => Object.hashAll(prefixes);
 }
 
 class SecurityCode {
@@ -187,6 +207,14 @@ class SecurityCode {
   const SecurityCode.cvp2()
       : name = SEC_CODE_CVP2,
         length = DEFAULT_SECURITY_CODE_LENGTH;
+
+  @override
+  bool operator ==(Object other) => (other is SecurityCode)
+      ? (name == other.name && length == other.length)
+      : false;
+
+  @override
+  int get hashCode => Object.hash(name, length);
 }
 
 class CardCollection {
