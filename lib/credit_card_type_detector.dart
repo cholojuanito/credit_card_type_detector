@@ -27,8 +27,9 @@ RegExp _whiteSpace = RegExp(r'\s+\b|\b\s');
 
 /// This function determines the CC type based on the cardPatterns
 CreditCardType detectCCType(String ccNumStr) {
-  CreditCardType cardType = CreditCardType.unknown;
-  ccNumStr = ccNumStr.replaceAll(_whiteSpace, '');;
+  CreditCardType cardType = CreditCardType.unknown();
+  ccNumStr = ccNumStr.replaceAll(_whiteSpace, '');
+  ;
 
   if (ccNumStr.isEmpty) {
     return cardType;
@@ -39,24 +40,24 @@ CreditCardType detectCCType(String ccNumStr) {
     return cardType;
   }
 
-  cardNumPatterns.forEach(
-    (CreditCardType type, Set<List<String>> patterns) {
-      for (List<String> patternRange in patterns) {
+  _customCards.cards.forEach(
+    (String cardName, CreditCardType type) {
+      for (Pattern pattern in type.patterns) {
         // Remove any spaces
         String ccPatternStr = ccNumStr;
-        int rangeLen = patternRange[0].length;
+        int rangeLen = pattern.prefixes[0].length;
         // Trim the CC number str to match the pattern prefix length
         if (rangeLen < ccNumStr.length) {
           ccPatternStr = ccPatternStr.substring(0, rangeLen);
         }
 
-        if (patternRange.length > 1) {
+        if (pattern.prefixes.length > 1) {
           // Convert the prefix range into numbers then make sure the
           // CC num is in the pattern range.
           // Because Strings don't have '>=' type operators
           int ccPrefixAsInt = int.parse(ccPatternStr);
-          int startPatternPrefixAsInt = int.parse(patternRange[0]);
-          int endPatternPrefixAsInt = int.parse(patternRange[1]);
+          int startPatternPrefixAsInt = int.parse(pattern.prefixes[0]);
+          int endPatternPrefixAsInt = int.parse(pattern.prefixes[1]);
           if (ccPrefixAsInt >= startPatternPrefixAsInt &&
               ccPrefixAsInt <= endPatternPrefixAsInt) {
             // Found a match
@@ -65,7 +66,7 @@ CreditCardType detectCCType(String ccNumStr) {
           }
         } else {
           // Just compare the single pattern prefix with the CC prefix
-          if (ccPatternStr == patternRange[0]) {
+          if (ccPatternStr == pattern.prefixes[0]) {
             // Found a match
             cardType = type;
             break;
