@@ -4,6 +4,7 @@ import 'package:test/test.dart';
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 
 void main() {
+  // Variables used in tests
   final CreditCardType rupayType = CreditCardType(
     'rupay',
     'RuPay',
@@ -29,16 +30,32 @@ void main() {
     SecurityCode.cvv(),
   );
 
-  final Set<Pattern> modifiedVisaPattern = {
-    Pattern(['3'])
-  };
+  final CreditCardType someMadeUpCardType = CreditCardType(
+    'mycard',
+    'MyCard',
+    [16, 17, 18],
+    {
+      Pattern(['1']),
+      Pattern(['2']),
+      Pattern(['999']),
+    },
+    SecurityCode.cid4(),
+  );
+
   final CreditCardType modifiedVisa = CreditCardType(
     TYPE_VISA,
     PRETTY_VISA,
     [16], // only length 16
-    modifiedVisaPattern,
+    {
+      Pattern(['3'])
+    },
     SecurityCode.cvv(),
   );
+
+  setUp(() {
+    resetCustomCardTypes();
+  });
+
   group('detectCCType: Correct default CC numbers', () {
     final String visaCCNumFull = "4647 7200 6779 1032";
     final String amexCCNumFull = "3799 9661 4347 278";
@@ -53,6 +70,7 @@ void main() {
     final String discoverCCNumPartial = '6011 2876 89';
     final String masterCardCCNumPartial = '5287 19';
     final String eloCardCCNumPartial = '6550 2121';
+
     test('full card numbers', () {
       expect(detectCCType(visaCCNumFull), equals(CreditCardType.visa()));
       expect(detectCCType(amexCCNumFull),
@@ -89,6 +107,7 @@ void main() {
     final String badCCNumPartial1 = '8647 7200';
     final String badCCNumPartial2 = '3399';
     final String badCCNumPartial3 = '6111 2878 9';
+
     test('full card numbers', () {
       expect(detectCCType(badCCNumFull1), equals(CreditCardType.unknown()));
       expect(detectCCType(badCCNumFull2), equals(CreditCardType.unknown()));
@@ -105,12 +124,21 @@ void main() {
   group('detectCCType: Custom CC numbers', () {
     final String rupayCCNumFull = '6026 1553 1595 4098';
     final String rupayCCNumPartial = '6026';
+    final String myCardCCNumFull = '1234 5678 9123 1';
+    final String myCardCCNumPartial = '2345 67';
+
     test('full card numbers', () {
-      // TODO
+      addCustomCardType('rupay', rupayType);
+      addCustomCardType('mycard', someMadeUpCardType);
+      expect(detectCCType(rupayCCNumFull), equals(rupayType));
+      expect(detectCCType(myCardCCNumFull), equals(someMadeUpCardType));
     });
 
     test('partial card numbers', () {
-      // TODO
+      addCustomCardType('rupay', rupayType);
+      addCustomCardType('mycard', someMadeUpCardType);
+      expect(detectCCType(rupayCCNumPartial), equals(rupayType));
+      expect(detectCCType(myCardCCNumPartial), equals(someMadeUpCardType));
     });
   });
 
@@ -124,18 +152,39 @@ void main() {
       });
 
       test('Edit custom card type', () {
+        addCustomCardType('rupay', rupayType);
         updateCustomCardType('rupay', modifiedRupay);
         expect(getCardType('rupay'), allOf([isNotNull, equals(modifiedRupay)]));
       });
+
       test('Remove custom card type', () {
+        addCustomCardType('rupay', rupayType);
         removeCustomCardType('rupay');
         expect(getCardType('rupay'), isNull);
       });
     });
     group('Default cards', () {
-      test('Edit default card type', () {});
-      test('Edit default card patterns', () {});
-      test('Remove default card type', () {});
+      final String goodDefaultVisaNumber = '4023 5678 1234 9076';
+      final String goodModifiedVisaNumber = '3023 5678 1234 9076';
+      test('Edit default card type', () {
+        updateCustomCardType(TYPE_VISA, modifiedVisa);
+        expect(
+            getCardType(TYPE_VISA), allOf([isNotNull, equals(modifiedVisa)]));
+      });
+
+      test('Add new card patterns to default card type', () {
+        CreditCardType visaCard = getCardType(TYPE_VISA)!;
+        visaCard.addPattern(Pattern(['3']));
+        expect(
+            detectCCType(goodDefaultVisaNumber), equals(getCardType(TYPE_VISA)));
+        expect(detectCCType(goodModifiedVisaNumber),
+            equals(getCardType(TYPE_VISA)));
+      });
+
+      test('Remove default card type', () {
+        removeCustomCardType(TYPE_VISA);
+        expect(getCardType(TYPE_VISA), isNull);
+      });
     });
   });
 
