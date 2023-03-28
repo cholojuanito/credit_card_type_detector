@@ -27,7 +27,6 @@ const String TYPE_ELO = 'elo';
 const String TYPE_MIR = 'mir';
 const String TYPE_HIPER = 'hiper';
 const String TYPE_HIPERCARD = 'hipercard';
-const String TYPE_UNKNOWN = 'unknown';
 
 /// Predefined pretty printed card brands
 const String PRETTY_VISA = 'Visa';
@@ -42,7 +41,6 @@ const String PRETTY_ELO = 'Elo';
 const String PRETTY_MIR = 'Mir';
 const String PRETTY_HIPER = 'Hiper';
 const String PRETTY_HIPERCARD = 'Hipercard';
-const String PRETTY_UNKNOWN = 'Unknown';
 
 /// A mapping of possible credit card types to their respective possible
 /// card number length defaults
@@ -59,7 +57,6 @@ const Map<String, List<int>> ccNumLengthDefaults = {
   TYPE_MIR: const [16, 17, 18, 19],
   TYPE_HIPER: const [16],
   TYPE_HIPERCARD: const [16],
-  TYPE_UNKNOWN: const [],
 };
 
 /// A mapping of possible credit card types to their respective security code defaults
@@ -76,7 +73,6 @@ const Map<String, SecurityCode> ccSecurityCodeDefaults = {
   TYPE_MIR: const SecurityCode.cvp2(),
   TYPE_HIPER: const SecurityCode.cvc(),
   TYPE_HIPERCARD: const SecurityCode.cvc(),
-  TYPE_UNKNOWN: const SecurityCode.cvv(),
 };
 
 /// A [List<String>] represents a range.
@@ -190,5 +186,4 @@ Map<String, Set<Pattern>> cardNumPatternDefaults = {
   TYPE_HIPERCARD: {
     Pattern(const ['606282']),
   },
-  TYPE_UNKNOWN: {}
 };

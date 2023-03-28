@@ -112,14 +112,6 @@ class CreditCardType {
         patterns = cardNumPatternDefaults[TYPE_HIPER]!,
         securityCode = ccSecurityCodeDefaults[TYPE_HIPER]!;
 
-  /// Creates a Hipercard card type with default values
-  CreditCardType.unknown()
-      : type = TYPE_UNKNOWN,
-        prettyType = PRETTY_UNKNOWN,
-        lengths = ccNumLengthDefaults[TYPE_UNKNOWN]!,
-        patterns = cardNumPatternDefaults[TYPE_UNKNOWN]!,
-        securityCode = ccSecurityCodeDefaults[TYPE_UNKNOWN]!;
-
   /// Add a new pattern to a card type
   void addPattern(Pattern pattern) {
     this.patterns.add(pattern);
