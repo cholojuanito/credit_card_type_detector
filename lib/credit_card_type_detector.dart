@@ -25,13 +25,14 @@ RegExp _nonNumeric = RegExp(r'\D+');
 /// Finds whitespace in any form
 RegExp _whiteSpace = RegExp(r'\s+\b|\b\s');
 
-/// This function determines the potential CC types based on the cardPatterns
+/// This function determines the potential CC types based on the cardPatterns.
+/// Returns a list of `CreditCardType`s with the most likely type as the first.
 List<CreditCardType> detectCCType(String ccNumStr) {
   List<CreditCardType> cardTypes = [];
   ccNumStr = ccNumStr.replaceAll(_whiteSpace, '');
 
   if (ccNumStr.isEmpty) {
-    return cardTypes;
+    return _customCards.cards.values.toList();
   }
 
   // Check that only numerics are in the string
@@ -44,10 +45,10 @@ List<CreditCardType> detectCCType(String ccNumStr) {
       for (Pattern pattern in type.patterns) {
         // Remove any spaces
         String ccPatternStr = ccNumStr;
-        int rangeLen = pattern.prefixes[0].length;
+        int patternLen = pattern.prefixes[0].length;
         // Trim the CC number str to match the pattern prefix length
-        if (rangeLen < ccNumStr.length) {
-          ccPatternStr = ccPatternStr.substring(0, rangeLen);
+        if (patternLen < ccNumStr.length) {
+          ccPatternStr = ccPatternStr.substring(0, patternLen);
         }
 
         if (pattern.prefixes.length > 1) {
@@ -60,6 +61,10 @@ List<CreditCardType> detectCCType(String ccNumStr) {
           if (ccPrefixAsInt >= startPatternPrefixAsInt &&
               ccPrefixAsInt <= endPatternPrefixAsInt) {
             // Found a match
+            type.matchStrength = _determineMatchStrength(
+              ccNumStr,
+              pattern.prefixes[0],
+            );
             cardTypes.add(type);
             break;
           }
@@ -67,6 +72,10 @@ List<CreditCardType> detectCCType(String ccNumStr) {
           // Just compare the single pattern prefix with the CC prefix
           if (ccPatternStr == pattern.prefixes[0]) {
             // Found a match
+            type.matchStrength = _determineMatchStrength(
+              ccNumStr,
+              pattern.prefixes[0],
+            );
             cardTypes.add(type);
             break;
           }
@@ -75,7 +84,17 @@ List<CreditCardType> detectCCType(String ccNumStr) {
     },
   );
 
+  cardTypes.sort((a, b) => b.matchStrength.compareTo(a.matchStrength));
   return cardTypes;
+}
+
+int _determineMatchStrength(String ccNumStr, String patternPrefix) {
+  if (ccNumStr.length >= patternPrefix.length) {
+    return patternPrefix.length;
+  }
+  else {
+    return 0;
+  }
 }
 
 /// Gets the `CreditCardType` object associated with the `cardName`
@@ -100,6 +119,7 @@ void removeCustomCardType(String cardName) {
   CreditCardType? _ = _customCards.removeCard(cardName);
 }
 
+/// Resets the card collection to the default card types
 void resetCustomCardTypes() {
   _customCards = CardCollection.from(_defaultCCTypes);
 }

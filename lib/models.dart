@@ -11,6 +11,7 @@ class CreditCardType {
   final List<int> lengths;
   final Set<Pattern> patterns;
   SecurityCode securityCode;
+  int matchStrength = 0;
 
   CreditCardType(this.type, this.prettyType, this.lengths, this.patterns,
       this.securityCode);
