@@ -1,0 +1,29 @@
+name: Publish Dart Package
+on:
+  release: 
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: google/dart:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: pub get
+      - name: Run Tests
+        run: pub run tests
+      - name: Setup pub credentials
+        shell: bash
+        env:
+          PUB_DEV_PUBLISH_ACCESS_TOKEN: ${{ secrets.PUB_DEV_PUBLISH_ACCESS_TOKEN }}
+          PUB_DEV_PUBLISH_REFRESH_TOKEN: ${{ secrets.PUB_DEV_PUBLISH_REFRESH_TOKEN }}
+          PUB_DEV_PUBLISH_TOKEN_ENDPOINT: ${{ secrets.PUB_DEV_PUBLISH_TOKEN_ENDPOINT }}
+          PUB_DEV_PUBLISH_EXPIRATION: ${{ secrets.PUB_DEV_PUBLISH_EXPIRATION }}
+        run: |
+          sh ./pub_login.sh
+      - name: Check publish warnings
+        run: pub publish --dry-run
+      - name: Publish package
+        run: pub publish -f
