@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'constants.dart';
 
 /// Represents the credit card type and general information

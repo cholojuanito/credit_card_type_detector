@@ -81,7 +81,7 @@ Map<String, Set<Pattern>> cardNumPatternDefaults = {
   TYPE_VISA: {
     Pattern(const ['4'])
   },
-    TYPE_MASTERCARD: {
+  TYPE_MASTERCARD: {
     Pattern(const ['51', '55']),
     Pattern(const ['2221', '2229']),
     Pattern(const ['223', '229']),
