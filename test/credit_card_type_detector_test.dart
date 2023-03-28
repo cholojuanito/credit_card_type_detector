@@ -11,10 +11,10 @@ void main() {
     [16],
     {
       Pattern(['60']),
-      Pattern(['65']), // Conflicts with Discover
-      Pattern(['81']), // Conflicts with UnionPay
+      Pattern(['6526']),
+      Pattern(['81']),
       Pattern(['82']),
-      Pattern(['508']), // Conflicts with Maestro
+      Pattern(['508']),
     },
     SecurityCode.cvv(),
   );
@@ -53,7 +53,7 @@ void main() {
   );
 
   setUp(() {
-    resetCustomCardTypes();
+    resetCardTypes();
   });
 
   group('detectCCType: Correct default CC numbers', () {
@@ -72,30 +72,87 @@ void main() {
     final String eloCardCCNumPartial = '6550 2121';
 
     test('full card numbers', () {
-      expect(detectCCType(visaCCNumFull), equals(CreditCardType.visa()));
-      expect(detectCCType(amexCCNumFull),
-          equals(CreditCardType.americanExpress()));
       expect(
-          detectCCType(discoverCCNumFull), equals(CreditCardType.discover()));
-      expect(detectCCType(masterCardCCNumFull),
-          equals(CreditCardType.mastercard()));
-      expect(detectCCType(jcbCardCCNumFull), equals(CreditCardType.jcb()));
-      expect(detectCCType(unionPayCardCCNumFull),
-          equals(CreditCardType.unionPay()));
+          detectCCType(visaCCNumFull),
+          allOf([
+            contains(CreditCardType.visa()),
+            containsAllInOrder([CreditCardType.visa()])
+          ]));
       expect(
-          detectCCType(maestroCardCCNumFull), equals(CreditCardType.maestro()));
-      expect(detectCCType(eloCardCCNumFull), equals(CreditCardType.elo()));
+          detectCCType(amexCCNumFull),
+          allOf([
+            contains(CreditCardType.americanExpress()),
+            containsAllInOrder([CreditCardType.americanExpress()])
+          ]));
+      expect(
+          detectCCType(discoverCCNumFull),
+          allOf([
+            contains(CreditCardType.discover()),
+            containsAllInOrder([CreditCardType.discover()])
+          ]));
+      expect(
+          detectCCType(masterCardCCNumFull),
+          allOf([
+            contains(CreditCardType.mastercard()),
+            containsAllInOrder([CreditCardType.mastercard()])
+          ]));
+      expect(
+          detectCCType(jcbCardCCNumFull),
+          allOf([
+            contains(CreditCardType.jcb()),
+            containsAllInOrder([CreditCardType.jcb()])
+          ]));
+      expect(
+          detectCCType(unionPayCardCCNumFull),
+          allOf([
+            contains(CreditCardType.unionPay()),
+            containsAllInOrder([CreditCardType.unionPay()])
+          ]));
+      expect(
+          detectCCType(maestroCardCCNumFull),
+          allOf([
+            contains(CreditCardType.maestro()),
+            containsAllInOrder([CreditCardType.maestro()])
+          ]));
+      expect(
+          detectCCType(eloCardCCNumFull),
+          allOf([
+            contains(CreditCardType.elo()),
+            containsAllInOrder([CreditCardType.elo()])
+          ]));
     });
 
     test('partial card numbers', () {
-      expect(detectCCType(visaCCNumPartial), equals(CreditCardType.visa()));
-      expect(detectCCType(amexCCNumPartial),
-          equals(CreditCardType.americanExpress()));
-      expect(detectCCType(discoverCCNumPartial),
-          equals(CreditCardType.discover()));
-      expect(detectCCType(masterCardCCNumPartial),
-          equals(CreditCardType.mastercard()));
-      expect(detectCCType(eloCardCCNumPartial), equals(CreditCardType.elo()));
+      expect(
+          detectCCType(visaCCNumPartial),
+          allOf([
+            contains(CreditCardType.visa()),
+            containsAllInOrder([CreditCardType.visa()])
+          ]));
+      expect(
+          detectCCType(amexCCNumPartial),
+          allOf([
+            contains(CreditCardType.americanExpress()),
+            containsAllInOrder([CreditCardType.americanExpress()])
+          ]));
+      expect(
+          detectCCType(discoverCCNumPartial),
+          allOf([
+            contains(CreditCardType.discover()),
+            containsAllInOrder([CreditCardType.discover()])
+          ]));
+      expect(
+          detectCCType(masterCardCCNumPartial),
+          allOf([
+            contains(CreditCardType.mastercard()),
+            containsAllInOrder([CreditCardType.mastercard()])
+          ]));
+      expect(
+          detectCCType(eloCardCCNumPartial),
+          allOf([
+            contains(CreditCardType.elo()),
+            containsAllInOrder([CreditCardType.elo()])
+          ]));
     });
   });
 
@@ -109,36 +166,57 @@ void main() {
     final String badCCNumPartial3 = '6111 2878 9';
 
     test('full card numbers', () {
-      expect(detectCCType(badCCNumFull1), equals(CreditCardType.unknown()));
-      expect(detectCCType(badCCNumFull2), equals(CreditCardType.unknown()));
-      expect(detectCCType(badCCNumFull3), equals(CreditCardType.unknown()));
+      expect(detectCCType(badCCNumFull1), isEmpty);
+      expect(detectCCType(badCCNumFull2), isEmpty);
+      expect(detectCCType(badCCNumFull3), isEmpty);
     });
 
     test('partial card numbers', () {
-      expect(detectCCType(badCCNumPartial1), equals(CreditCardType.unknown()));
-      expect(detectCCType(badCCNumPartial2), equals(CreditCardType.unknown()));
-      expect(detectCCType(badCCNumPartial3), equals(CreditCardType.unknown()));
+      expect(detectCCType(badCCNumPartial1), isEmpty);
+      expect(detectCCType(badCCNumPartial2), isEmpty);
+      expect(detectCCType(badCCNumPartial3), isEmpty);
     });
   });
 
   group('detectCCType: Custom CC numbers', () {
-    final String rupayCCNumFull = '6026 1553 1595 4098';
-    final String rupayCCNumPartial = '6026';
+    // Rupay type should match as both Rupay and Discover
+    final String rupayCCNumFull = '6526 1553 1595 4098';
+    final String rupayCCNumPartial = '6526';
     final String myCardCCNumFull = '1234 5678 9123 1';
     final String myCardCCNumPartial = '2345 67';
 
     test('full card numbers', () {
-      addCustomCardType('rupay', rupayType);
-      addCustomCardType('mycard', someMadeUpCardType);
-      expect(detectCCType(rupayCCNumFull), equals(rupayType));
-      expect(detectCCType(myCardCCNumFull), equals(someMadeUpCardType));
+      addCardType('rupay', rupayType);
+      addCardType('mycard', someMadeUpCardType);
+      expect(
+          detectCCType(rupayCCNumFull),
+          allOf([
+            contains(rupayType),
+            containsAllInOrder([rupayType, CreditCardType.discover()])
+          ]));
+      expect(
+          detectCCType(myCardCCNumFull),
+          allOf([
+            contains(someMadeUpCardType),
+            containsAllInOrder([someMadeUpCardType])
+          ]));
     });
 
     test('partial card numbers', () {
-      addCustomCardType('rupay', rupayType);
-      addCustomCardType('mycard', someMadeUpCardType);
-      expect(detectCCType(rupayCCNumPartial), equals(rupayType));
-      expect(detectCCType(myCardCCNumPartial), equals(someMadeUpCardType));
+      addCardType('rupay', rupayType);
+      addCardType('mycard', someMadeUpCardType);
+      expect(
+          detectCCType(rupayCCNumPartial),
+          allOf([
+            contains(rupayType),
+            containsAllInOrder([rupayType, CreditCardType.discover()])
+          ]));
+      expect(
+          detectCCType(myCardCCNumPartial),
+          allOf([
+            contains(someMadeUpCardType),
+            containsAllInOrder([someMadeUpCardType])
+          ]));
     });
   });
 
@@ -146,20 +224,19 @@ void main() {
   group('Customizing card types', () {
     group('Custom cards', () {
       test('Add custom card type', () {
-        addCustomCardType('rupay', rupayType);
-        expect(getCardType('rupay'), equals(rupayType));
+        addCardType('rupay', rupayType);
         expect(getCardType('rupay'), allOf([isNotNull, equals(rupayType)]));
       });
 
       test('Edit custom card type', () {
-        addCustomCardType('rupay', rupayType);
-        updateCustomCardType('rupay', modifiedRupay);
+        addCardType('rupay', rupayType);
+        updateCardType('rupay', modifiedRupay);
         expect(getCardType('rupay'), allOf([isNotNull, equals(modifiedRupay)]));
       });
 
       test('Remove custom card type', () {
-        addCustomCardType('rupay', rupayType);
-        removeCustomCardType('rupay');
+        addCardType('rupay', rupayType);
+        removeCardType('rupay');
         expect(getCardType('rupay'), isNull);
       });
     });
@@ -167,7 +244,7 @@ void main() {
       final String goodDefaultVisaNumber = '4023 5678 1234 9076';
       final String goodModifiedVisaNumber = '3023 5678 1234 9076';
       test('Edit default card type', () {
-        updateCustomCardType(TYPE_VISA, modifiedVisa);
+        updateCardType(TYPE_VISA, modifiedVisa);
         expect(
             getCardType(TYPE_VISA), allOf([isNotNull, equals(modifiedVisa)]));
       });
@@ -175,14 +252,14 @@ void main() {
       test('Add new card patterns to default card type', () {
         CreditCardType visaCard = getCardType(TYPE_VISA)!;
         visaCard.addPattern(Pattern(['3']));
-        expect(
-            detectCCType(goodDefaultVisaNumber), equals(getCardType(TYPE_VISA)));
+        expect(detectCCType(goodDefaultVisaNumber),
+            contains(getCardType(TYPE_VISA)));
         expect(detectCCType(goodModifiedVisaNumber),
-            equals(getCardType(TYPE_VISA)));
+            contains(getCardType(TYPE_VISA)));
       });
 
       test('Remove default card type', () {
-        removeCustomCardType(TYPE_VISA);
+        removeCardType(TYPE_VISA);
         expect(getCardType(TYPE_VISA), isNull);
       });
     });
@@ -194,16 +271,30 @@ void main() {
     final String badStr = '4000 abc';
 
     test('empty string', () {
-      expect(detectCCType(emptyStr), CreditCardType.unknown());
+      expect(
+          detectCCType(emptyStr),
+          containsAll([
+            CreditCardType.americanExpress(),
+            CreditCardType.dinersClub(),
+            CreditCardType.discover(),
+            CreditCardType.elo(),
+            CreditCardType.hiper(),
+            CreditCardType.hipercard(),
+            CreditCardType.jcb(),
+            CreditCardType.maestro(),
+            CreditCardType.mastercard(),
+            CreditCardType.unionPay(),
+            CreditCardType.visa()
+          ]));
     });
 
     test('string with non-numerical chars', () {
-      expect(detectCCType(badStr), CreditCardType.unknown());
+      expect(detectCCType(badStr), isEmpty);
     });
 
     test('Add existing custom card type throws exception', () {
-      addCustomCardType('rupay', rupayType);
-      expect(() => addCustomCardType('rupay', rupayType), throwsException);
+      addCardType('rupay', rupayType);
+      expect(() => addCardType('rupay', rupayType), throwsException);
       expect(getCardType('rupay'), allOf([isNotNull, equals(rupayType)]));
     });
   });
