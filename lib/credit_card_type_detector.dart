@@ -25,19 +25,18 @@ RegExp _nonNumeric = RegExp(r'\D+');
 /// Finds whitespace in any form
 RegExp _whiteSpace = RegExp(r'\s+\b|\b\s');
 
-/// This function determines the CC type based on the cardPatterns
-CreditCardType detectCCType(String ccNumStr) {
-  CreditCardType cardType = CreditCardType.unknown();
+/// This function determines the potential CC types based on the cardPatterns
+List<CreditCardType> detectCCType(String ccNumStr) {
+  List<CreditCardType> cardTypes = [];
   ccNumStr = ccNumStr.replaceAll(_whiteSpace, '');
-  ;
 
   if (ccNumStr.isEmpty) {
-    return cardType;
+    return cardTypes;
   }
 
   // Check that only numerics are in the string
   if (_nonNumeric.hasMatch(ccNumStr)) {
-    return cardType;
+    return cardTypes;
   }
 
   _customCards.cards.forEach(
@@ -61,14 +60,14 @@ CreditCardType detectCCType(String ccNumStr) {
           if (ccPrefixAsInt >= startPatternPrefixAsInt &&
               ccPrefixAsInt <= endPatternPrefixAsInt) {
             // Found a match
-            cardType = type;
+            cardTypes.add(type);
             break;
           }
         } else {
           // Just compare the single pattern prefix with the CC prefix
           if (ccPatternStr == pattern.prefixes[0]) {
             // Found a match
-            cardType = type;
+            cardTypes.add(type);
             break;
           }
         }
@@ -76,7 +75,7 @@ CreditCardType detectCCType(String ccNumStr) {
     },
   );
 
-  return cardType;
+  return cardTypes;
 }
 
 /// Gets the `CreditCardType` object associated with the `cardName`
