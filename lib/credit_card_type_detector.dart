@@ -14,7 +14,6 @@ final CardCollection _defaultCCTypes = CardCollection({
   TYPE_ELO: CreditCardType.elo(),
   TYPE_HIPER: CreditCardType.hiper(),
   TYPE_HIPERCARD: CreditCardType.hipercard(),
-  TYPE_UNKNOWN: CreditCardType.unknown(),
 });
 
 CardCollection _customCards = CardCollection.from(_defaultCCTypes);
@@ -91,8 +90,7 @@ List<CreditCardType> detectCCType(String ccNumStr) {
 int _determineMatchStrength(String ccNumStr, String patternPrefix) {
   if (ccNumStr.length >= patternPrefix.length) {
     return patternPrefix.length;
-  }
-  else {
+  } else {
     return 0;
   }
 }
@@ -103,23 +101,23 @@ CreditCardType? getCardType(String cardName) {
 }
 
 /// Adds a custom card type to the card collection
-/// 
+///
 /// Throws `Exception` if the `cardName` is already in the collection
-void addCustomCardType(String cardName, CreditCardType type) {
+void addCardType(String cardName, CreditCardType type) {
   _customCards.addCardType(cardName, type);
 }
 
 /// Updates the card type of the `cardName` in the card collection
-void updateCustomCardType(String cardName, CreditCardType type) {
+void updateCardType(String cardName, CreditCardType type) {
   _customCards.updateCardType(cardName, type);
 }
 
 /// Removes `cardName` from the card collection
-void removeCustomCardType(String cardName) {
+void removeCardType(String cardName) {
   CreditCardType? _ = _customCards.removeCard(cardName);
 }
 
 /// Resets the card collection to the default card types
-void resetCustomCardTypes() {
+void resetCardTypes() {
   _customCards = CardCollection.from(_defaultCCTypes);
 }
