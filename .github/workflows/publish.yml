@@ -4,17 +4,36 @@ on:
     types: [published]
 
 jobs:
-  build:
+  test:
+    name: 🧪 Test Package
     runs-on: ubuntu-latest
-    container:
-      image: google/dart:latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: pub get
-      - name: Run Tests
-        run: pub run test
-      - name: Setup pub credentials
+
+      - name: 🔧 Setup Dart SDK
+        uses: dart-lang/setup-dart@v1.5.0
+
+      - name: 🧪 Run Tests
+        run: dart test
+        
+  publish:
+    name: 📦 Publish package
+    runs-on: ubuntu-latest
+    needs: [test]
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: 🔧 Setup Dart SDK
+        uses: dart-lang/setup-dart@v1.5.0
+
+      - name: ⏬ Get depdendencies
+        run: dart pub get
+
+      - name: 🧬 Analyze
+        run: dart analyze
+        
+      - name: ⚙ Setup pub credentials
         shell: bash
         env:
           PUB_DEV_PUBLISH_ACCESS_TOKEN: ${{ secrets.PUB_DEV_PUBLISH_ACCESS_TOKEN }}
@@ -23,7 +42,6 @@ jobs:
           PUB_DEV_PUBLISH_EXPIRATION: ${{ secrets.PUB_DEV_PUBLISH_EXPIRATION }}
         run: |
           sh ./pub_login.sh
-      - name: Check publish warnings
-        run: pub publish --dry-run
-      - name: Publish package
-        run: pub publish -f
+      
+      - name: 🚀 Publish
+        run: dart pub publish -n && dart pub publish -f
