@@ -29,9 +29,6 @@ jobs:
 
       - name: ⏬ Get depdendencies
         run: dart pub get
-
-      - name: 🧬 Analyze
-        run: dart analyze
         
       - name: ⚙ Setup pub credentials
         shell: bash
