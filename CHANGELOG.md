@@ -1,3 +1,6 @@
+## [3.0.1] - 30 Apr 2024
+* Add forgotten line for MIR cards
+
 ## [3.0.0] - 28 Mar 2023
 * **Breaking changes**
   * `detectCCType()` now returns a `List<CreditCardType>` to support custom cards. This list will have the most likely card type as the first element
