@@ -8,10 +8,10 @@ jobs:
     name: 🧪 Test Package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: 🔧 Setup Dart SDK
-        uses: dart-lang/setup-dart@v1.5.0
+        uses: dart-lang/setup-dart@v1.6.4
 
       - name: 🧪 Run Tests
         run: dart test
@@ -22,10 +22,10 @@ jobs:
     needs: [test]
     
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - name: 🔧 Setup Dart SDK
-        uses: dart-lang/setup-dart@v1.5.0
+        uses: dart-lang/setup-dart@v1.6.4
 
       - name: ⏬ Get depdendencies
         run: dart pub get
