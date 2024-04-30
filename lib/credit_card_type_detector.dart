@@ -14,6 +14,7 @@ final CardCollection _defaultCCTypes = CardCollection({
   TYPE_ELO: CreditCardType.elo(),
   TYPE_HIPER: CreditCardType.hiper(),
   TYPE_HIPERCARD: CreditCardType.hipercard(),
+  TYPE_MIR: CreditCardType.mir(),
 });
 
 CardCollection _customCards = CardCollection.from(_defaultCCTypes);
