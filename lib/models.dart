@@ -110,6 +110,20 @@ class CreditCardType {
         patterns = cardNumPatternDefaults[TYPE_HIPER]!,
         securityCode = ccSecurityCodeDefaults[TYPE_HIPER]!;
 
+  CreditCardType.rupay()
+      : type = TYPE_RUPAY,
+        prettyType = PRETTY_RUPAY,
+        lengths = ccNumLengthDefaults[TYPE_RUPAY]!,
+        patterns = cardNumPatternDefaults[TYPE_RUPAY]!,
+        securityCode = ccSecurityCodeDefaults[TYPE_RUPAY]!;
+  CreditCardType.unkown()
+      : type = TYPE_UNKNOWN,
+        prettyType = PRETTY_UNKNOWN,
+        lengths = ccNumLengthDefaults[TYPE_UNKNOWN]!,
+        patterns = cardNumPatternDefaults[TYPE_UNKNOWN]!,
+        securityCode = ccSecurityCodeDefaults[TYPE_UNKNOWN]!;
+
+
   /// Add a new pattern to a card type
   void addPattern(Pattern pattern) {
     this.patterns.add(pattern);
