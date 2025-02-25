@@ -11,7 +11,7 @@ import 'package:flutter/widgets.dart';
 ///        ),
 ///  ...
 /// 
-///  The [BLoCProvider] now becomes part of the widget tree and any widgets in the
+///  The [BlocProvider] now becomes part of the widget tree and any widgets in the
 ///  subtree can now access the [IncrementBloc] through the following line of code:
 /// 
 ///     final IncrementBloc counterBloc = BlocProvider.of<IncrementBloc>(context);
@@ -29,43 +29,41 @@ abstract class Bloc {
 /// Generic BLoC provider
 class BlocProvider<T extends Bloc> extends StatefulWidget {
   BlocProvider({
-    Key key,
-    @required this.child,
-    @required this.bloc,
+    Key? key,
+    required this.child,
+    required this.bloc,
   }): super(key: key);
 
-
-/// The [Bloc] that is now accessible to members of the widget subtree
+  /// The [Bloc] that is now accessible to members of the widget subtree
   final T bloc;
 
-/// The [Widget] that makes it possible to continue the building of the widget tree
+  /// The [Widget] that makes it possible to continue the building of the widget tree
   final Widget child;
 
   @override
   _BlocProviderState<T> createState() => _BlocProviderState<T>();
 
-/// This function allows any widget to access a [Bloc] that was defined
-///  earlier in the widget tree based on the [BuildContext]
-  static T of<T extends Bloc>(BuildContext context){
-    final type = _typeOf<BlocProvider<T>>();
-    BlocProvider<T> provider = context.findAncestorWidgetOfExactType();
+  /// This function allows any widget to access a [Bloc] that was defined
+  ///  earlier in the widget tree based on the [BuildContext]
+  static T of<T extends Bloc>(BuildContext context) {
+    final provider = context.findAncestorWidgetOfExactType<BlocProvider<T>>();
+    if (provider == null) {
+      throw FlutterError('BlocProvider.of() called with a context that does not contain a Bloc of type $T.');
+    }
     return provider.bloc;
   }
-
-/// Gets the [Type] of the [Bloc] so it can be found in the widget tree
-  static Type _typeOf<T>() => T;
 }
 
 /// The state for the [BlocProvider] widget
-class _BlocProviderState<T> extends State<BlocProvider<Bloc>>{
+class _BlocProviderState<T extends Bloc> extends State<BlocProvider<T>> {
   @override
-  void dispose(){
+  void dispose() {
     widget.bloc.dispose();
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return widget.child;
   }
 }

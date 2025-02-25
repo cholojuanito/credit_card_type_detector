@@ -1,28 +1,23 @@
 // Libraries
 //import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter/material.dart'
-    show
-        Scaffold,
-        AppBar,
-        TextField,
-        TextInputAction,
-        InputDecoration,
-        MaterialButton;
+import 'package:credit_card_type_detector/constants.dart';
+import 'package:credit_card_type_detector/models.dart';
 
 // Packages
-import 'package:flutter_masked_text/flutter_masked_text.dart';
+import 'package:extended_masked_text/extended_masked_text.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:credit_card_type_detector/credit_card_type_detector.dart';
 
 // Local imports
 import 'package:credit_card_test/blocs/add_credit_card_bloc.dart';
 import 'package:credit_card_test/blocs/bloc.dart';
+import 'package:flutter/material.dart';
+
+// Local imports
 
 class AddCreditCardScreen extends StatelessWidget {
-  BuildContext _context;
-  AddCreditCardBloc _addCardBloc;
-  final _addCCFormKey = new GlobalKey<FormState>(debugLabel: "addCCForm");
+  late BuildContext _context;
+  late AddCreditCardBloc _addCardBloc;
+  final _addCCFormKey = GlobalKey<FormState>(debugLabel: "addCCForm");
   final FocusNode _ccNumFocus = FocusNode();
   final FocusNode _expDateFocus = FocusNode();
   final FocusNode _cvvFocus = FocusNode();
@@ -40,13 +35,13 @@ class AddCreditCardScreen extends StatelessWidget {
 
     return Container(
       height: ccDrawingHeight,
-      color: Color(0xffe0e0e0),
+      color: const Color(0xffe0e0e0),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
         child: Center(
           child: Container(
             width: ccDrawingWidth,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(
                 Radius.circular(12.0),
               ),
@@ -69,15 +64,15 @@ class AddCreditCardScreen extends StatelessWidget {
                     stream: _addCardBloc.ccNum,
                     initialData: "XXXX XXXX XXXX XXXX",
                     builder: (context, snapshot) {
-                      snapshot.data.length > 0
-                          ? _ccNumMask.updateText(snapshot.data)
-                          : null;
+                      if (snapshot.data!.isNotEmpty) {
+                        _ccNumMask.updateText(snapshot.data!);
+                      }
 
                       return Text(
-                        snapshot.data.length > 0
-                            ? snapshot.data
+                        snapshot.data!.isNotEmpty
+                            ? snapshot.data!
                             : "XXXX XXXX XXXX XXXX",
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Color(0xffffffff),
                           fontSize: 20.0,
                         ),
@@ -90,65 +85,74 @@ class AddCreditCardScreen extends StatelessWidget {
                 Positioned(
                   right: 20.0,
                   top: 15.0,
-                  child: StreamBuilder(
+                  child: StreamBuilder<CreditCardType>(
                     stream: _addCardBloc.ccType,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    builder: (BuildContext context,
+                        AsyncSnapshot<CreditCardType> snapshot) {
                       Widget icon;
-                      CreditCardType currType = snapshot.data;
-                      switch (currType) {
-                        case CreditCardType.visa:
+                      CreditCardType currType =
+                          snapshot.data ?? CreditCardType.unkown();
+                      switch (currType.type) {
+                        case TYPE_VISA:
                           icon = Icon(
                             FontAwesomeIcons.ccVisa,
                             size: ccIconSize,
-                            color: Color(0xffffffff),
+                            color: const Color(0xffffffff),
                           );
                           break;
 
-                        case CreditCardType.amex:
+                        case TYPE_AMEX:
                           icon = Icon(
                             FontAwesomeIcons.ccAmex,
                             size: ccIconSize,
-                            color: Color(0xffffffff),
+                            color: const Color(0xffffffff),
                           );
                           break;
 
-                        case CreditCardType.maestro:
-                        case CreditCardType.mastercard:
+                        case TYPE_MAESTRO:
+                        case TYPE_MASTERCARD:
                           icon = Icon(
                             FontAwesomeIcons.ccMastercard,
                             size: ccIconSize,
-                            color: Color(0xffffffff),
+                            color: const Color(0xffffffff),
                           );
                           break;
 
-                        case CreditCardType.discover:
+                        case TYPE_DISCOVER:
                           icon = Icon(
                             FontAwesomeIcons.ccDiscover,
                             size: ccIconSize,
-                            color: Color(0xffffffff),
+                            color: const Color(0xffffffff),
                           );
                           break;
 
-                        case CreditCardType.dinersclub:
+                        case TYPE_DINERS_CLUB:
                           icon = Icon(
                             FontAwesomeIcons.ccDinersClub,
                             size: ccIconSize,
-                            color: Color(0xffffffff),
+                            color: const Color(0xffffffff),
                           );
                           break;
 
-                        case CreditCardType.jcb:
+                        case TYPE_JCB:
                           icon = Icon(
                             FontAwesomeIcons.ccJcb,
                             size: ccIconSize,
-                            color: Color(0xffffffff),
+                            color: const Color(0xffffffff),
+                          );
+                          break;
+                        case TYPE_RUPAY:
+                          icon = Icon(
+                            FontAwesomeIcons.ccStripe,
+                            size: ccIconSize,
+                            color: const Color(0xffffffff),
                           );
                           break;
 
                         // Don't have icons for the rest
                         default:
                           icon = Container(
-                            color: Color(0x00000000),
+                            color: const Color(0x00000000),
                           );
                       }
 
@@ -162,28 +166,21 @@ class AddCreditCardScreen extends StatelessWidget {
                   left: 20.0,
                   bottom: 60.0,
                   child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      // Text(
-                      //   "Good Thru",
-                      //   style: TextStyle(
-                      //     fontSize: 15.0,
-                      //     fontWeight: FontWeight.w700,
-                      //     color: Color(0xffffffff),
-                      //   ),
-                      // ),
                       StreamBuilder<String>(
                         stream: _addCardBloc.expDate,
                         initialData: "MM/YY",
                         builder: (context, snapshot) {
-                          snapshot.data.length > 0
-                              ? _expMask.updateText(snapshot.data)
-                              : null;
+                          if (snapshot.data!.isNotEmpty) {
+                            _expMask.updateText(snapshot.data!);
+                          }
 
                           return Text(
-                            snapshot.data.length > 0 ? snapshot.data : "MM/YY",
-                            style: TextStyle(
+                            snapshot.data!.isNotEmpty
+                                ? snapshot.data!
+                                : "MM/YY",
+                            style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.normal,
                               color: Color(0xffffffff),
@@ -200,26 +197,17 @@ class AddCreditCardScreen extends StatelessWidget {
                   right: 20.0,
                   bottom: 60.0,
                   child: Column(
-                    // crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      // Text(
-                      //   "CVV",
-                      //   style: TextStyle(
-                      //     fontSize: 15.0,
-                      //     fontWeight: FontWeight.w700,
-                      //     color: Color(0xffffffff),
-                      //   ),
-                      // ),
                       StreamBuilder<String>(
                         stream: _addCardBloc.cvv,
                         initialData: "CVV/CVC",
                         builder: (context, snapshot) {
                           return Text(
-                            snapshot.data.length > 0
-                                ? snapshot.data
+                            snapshot.data!.isNotEmpty
+                                ? snapshot.data!
                                 : "CVV/CVC",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16.0,
                               fontWeight: FontWeight.normal,
                               color: Color(0xffffffff),
@@ -240,11 +228,10 @@ class AddCreditCardScreen extends StatelessWidget {
                     initialData: "Cardholder Name",
                     builder: (context, snapshot) {
                       return Text(
-                        snapshot.data,
-                        style: TextStyle(
+                        snapshot.data!,
+                        style: const TextStyle(
                           color: Color(0xffffffff),
                           fontWeight: FontWeight.normal,
-                          //fontFamily: UIData.ralewayFont,
                           fontSize: 20.0,
                         ),
                       );
@@ -266,15 +253,16 @@ class AddCreditCardScreen extends StatelessWidget {
       height: deviceSize.height * 0.1,
       width: deviceSize.width,
       child: Form(
+        key: _addCCFormKey,
         child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+          padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
           scrollDirection: Axis.horizontal,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 width: 250.0,
                 child: TextField(
                   controller: _ccNumMask,
@@ -287,13 +275,12 @@ class AddCreditCardScreen extends StatelessWidget {
                   },
                   autofocus: true,
                   maxLength: 19,
-                  style: TextStyle(
-                    //fontFamily: UIData.ralewayFont,
+                  style: const TextStyle(
                     color: Color(0xff000000),
                   ),
                   onChanged: (newCCNum) =>
                       _addCardBloc.updateCCNum.add(_ccNumMask.text),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: "Credit Card Number",
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -302,7 +289,7 @@ class AddCreditCardScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 width: 100.0,
                 child: TextField(
                   controller: _expMask,
@@ -314,12 +301,12 @@ class AddCreditCardScreen extends StatelessWidget {
                     FocusScope.of(_context).requestFocus(_cvvFocus);
                   },
                   maxLength: 5,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xff000000),
                   ),
                   onChanged: (newExp) =>
                       _addCardBloc.updateExp.add(_expMask.text),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -328,7 +315,7 @@ class AddCreditCardScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 width: 100.0,
                 child: TextField(
                   keyboardType: TextInputType.number,
@@ -339,11 +326,11 @@ class AddCreditCardScreen extends StatelessWidget {
                     FocusScope.of(_context).requestFocus(_nameFocus);
                   },
                   maxLength: 3,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xff000000),
                   ),
                   onChanged: (newCvv) => _addCardBloc.updateCvv.add(newCvv),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -352,7 +339,7 @@ class AddCreditCardScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 8.0),
+                margin: const EdgeInsets.symmetric(horizontal: 8.0),
                 width: 250.0,
                 child: TextField(
                   keyboardType: TextInputType.text,
@@ -362,11 +349,11 @@ class AddCreditCardScreen extends StatelessWidget {
                     _nameFocus.unfocus();
                   },
                   maxLength: 20,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Color(0xff000000),
                   ),
                   onChanged: (newName) => _addCardBloc.updateName.add(newName),
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -390,7 +377,7 @@ class AddCreditCardScreen extends StatelessWidget {
     if (validated) {
       child = Container(
         child: MaterialButton(
-          child: Text(
+          child: const Text(
             "Save Card",
             style: TextStyle(
               color: Color(0xffffffff),
@@ -400,9 +387,9 @@ class AddCreditCardScreen extends StatelessWidget {
           ),
           minWidth: deviceSize.width,
           height: 50.0,
-          color: Color(0xff4CD964),
+          color: const Color(0xff4CD964),
           elevation: 0.0,
-          onPressed: () => _saveCard,
+          onPressed: _saveCard,
         ),
       );
     }
@@ -410,7 +397,14 @@ class AddCreditCardScreen extends StatelessWidget {
     return child;
   }
 
-  void _saveCard() {}
+  void _saveCard() {
+    // Implement your save card logic here
+    print("Saving card...");
+    // You might want to validate the form before proceeding
+    if (_addCCFormKey.currentState?.validate() ?? false) {
+      // Implement your save logic
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -419,8 +413,8 @@ class AddCreditCardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
-        backgroundColor: Color(0xffffffff),
-        title: Text(
+        backgroundColor: const Color(0xffffffff),
+        title: const Text(
           "Add Credit Card",
           style: TextStyle(
             color: Color(0xff000000),

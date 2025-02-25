@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:credit_card_type_detector/credit_card_type_detector.dart';
+import 'package:credit_card_type_detector/models.dart';
 
 import './bloc.dart';
 
@@ -17,7 +17,7 @@ class AddCreditCardBloc implements Bloc {
   Sink<String> get updateName => _nameInputActionController.sink;
   Sink<String> get updateCvv => _cvvInputActionController.sink;
 
-  ///  Streams for changing the info
+  /// Streams for changing the info
   final _ccTypeController = StreamController<CreditCardType>();
   final _ccNumController = StreamController<String>();
   final _expController = StreamController<String>();
@@ -39,16 +39,16 @@ class AddCreditCardBloc implements Bloc {
   }
 
   void dispose() {
-    _ccNumInputActionController?.close();
-    _cvvInputActionController?.close();
-    _expInputActionController?.close();
-    _nameInputActionController?.close();
+    _ccNumInputActionController.close();
+    _cvvInputActionController.close();
+    _expInputActionController.close();
+    _nameInputActionController.close();
 
-    _ccTypeController?.close();
-    _ccNumController?.close();
-    _expController?.close();
-    _nameController?.close();
-    _cvvController?.close();
+    _ccTypeController.close();
+    _ccNumController.close();
+    _expController.close();
+    _nameController.close();
+    _cvvController.close();
   }
 
   _onCCNumInput(String newNum) {
@@ -56,7 +56,13 @@ class AddCreditCardBloc implements Bloc {
     _ccNumController.add(newNum);
 
     // Determine the CC type and update it
-    _ccTypeController.add(detectCCType(newNum));
+    final cardTypes = detectCCType(newNum);
+    // Take the first detected type or use a default/unknown type if the list is empty
+    if (cardTypes.isNotEmpty) {
+      _ccTypeController.add(cardTypes.first);
+    } else {
+      _ccTypeController.add(CreditCardType.unkown());
+    }
   }
 
   _onExpInput(String newExp) {
